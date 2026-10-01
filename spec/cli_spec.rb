@@ -10,7 +10,7 @@ RSpec.describe Secscan::CLI do
       status = nil
       expect do
         status = described_class.run([dir, "--format", "json", "--fail-on", "critical"])
-      end.to output(/"findings": \[\]/).to_stdout
+      end.to output(/"findings":\s*\[\s*\]/m).to_stdout
       expect(status).to eq(0)
     end
   end

@@ -111,7 +111,7 @@ module Secscan
       build(
         id: "sec-jwt-token",
         name: "JSON Web Token (JWT)",
-        pattern: "\\beyJ[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*\\b",
+        pattern: "\\beyJ[-_A-Za-z0-9=]+\\.[-_A-Za-z0-9=]+\\.[-+/=_A-Za-z0-9.]*\\b",
         severity: "HIGH",
         category: "AUTH_TOKEN",
         description: "Token JWT estático embutido no código-fonte.",
