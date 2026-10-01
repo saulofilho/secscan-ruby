@@ -8,6 +8,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,9 +22,9 @@ jobs:
 
       - run: bundle exec rspec
 
+      - uses: rubygems/configure-rubygems-credentials@v1.0.0
+
       - name: Publish to RubyGems
-        env:
-          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
           gem build secscan.gemspec
           gem push secscan-*.gem
