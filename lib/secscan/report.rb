@@ -70,7 +70,7 @@ module Secscan
         {
           "ruleId" => finding.rule_id,
           "level" => level,
-          "message" => { "text" => "#{finding.rule_name}. Valor: #{shown}" },
+          "message" => { "text" => "#{finding.rule_name}. Value: #{shown}" },
           "locations" => [
             {
               "physicalLocation" => {
@@ -108,32 +108,32 @@ module Secscan
     def to_markdown(report, reveal_secrets: false)
       metrics = report.metrics
       findings_md = if report.findings.empty?
-                      "_Nenhum segredo ou rota sensível encontrado._"
+                      "_No secrets or sensitive routes found._"
                     else
                       report.findings.map { |finding| finding_markdown(finding, reveal_secrets) }.join("\n\n")
                     end
       routes = if report.api_endpoints.empty?
-                 "_Nenhum endpoint mapeado._"
+                 "_No endpoints mapped._"
                else
                  report.api_endpoints.map do |item|
-                   suffix = item.is_internal_or_admin ? " **(sensível)**" : ""
-                   "- `#{item.method}` `#{item.path}` em `#{item.file}:#{item.line}`#{suffix}"
+                   suffix = item.is_internal_or_admin ? " **(sensitive)**" : ""
+                   "- `#{item.method}` `#{item.path}` in `#{item.file}:#{item.line}`#{suffix}"
                  end.join("\n")
                end
 
       <<~MARKDOWN
-        # Relatório SecScan
+        # SecScan report
 
-        - **Alvo:** `#{report.target}`
-        - **Quando:** #{report.timestamp}
-        - **Arquivos analisados:** #{report.scanned_files_count} (ignorados: #{report.ignored_files_count})
-        - **Achados:** #{report.findings.length}
+        - **Target:** `#{report.target}`
+        - **When:** #{report.timestamp}
+        - **Files scanned:** #{report.scanned_files_count} (ignored: #{report.ignored_files_count})
+        - **Findings:** #{report.findings.length}
         - **Security score:** #{metrics.security_score}/100
         - **Impact score:** #{metrics.security_impact_score}/100 (#{metrics.impact_level})
 
-        ## Severidade
+        ## Severity
 
-        | Severidade | Quantidade |
+        | Severity | Count |
         |---|---|
         | CRITICAL | #{metrics.critical_count} |
         | HIGH | #{metrics.high_count} |
@@ -141,7 +141,7 @@ module Secscan
         | LOW | #{metrics.low_count} |
         | INFO | #{metrics.info_count} |
 
-        ## Achados
+        ## Findings
 
         #{findings_md}
 
@@ -238,11 +238,11 @@ module Secscan
       shown = reveal_secrets ? finding.matched_secret : finding.masked_secret
       <<~BLOCK.chomp
         ### [#{finding.severity}] #{finding.rule_name}
-        - **Arquivo:** `#{finding.file}` (linha #{finding.line})
-        - **Valor:** `#{shown}`
-        - **Entropia:** #{finding.entropy}
-        - **Descrição:** #{finding.description}
-        - **Remediação:** #{finding.remediation}
+        - **File:** `#{finding.file}` (line #{finding.line})
+        - **Value:** `#{shown}`
+        - **Entropy:** #{finding.entropy}
+        - **Description:** #{finding.description}
+        - **Remediation:** #{finding.remediation}
       BLOCK
     end
   end

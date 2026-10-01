@@ -36,7 +36,7 @@ module Secscan
 
       if options[:output]
         File.write(options[:output], text)
-        warn "Relatório gravado em #{options[:output]}"
+        warn "Report written to #{options[:output]}"
       else
         $stdout.write(text)
       end
@@ -48,7 +48,7 @@ module Secscan
       end
       0
     rescue OptionParser::ParseError, InputError => e
-      warn "Erro: #{e.message}"
+      warn "Error: #{e.message}"
       2
     end
 
@@ -57,7 +57,7 @@ module Secscan
       if fail_on
         threshold = SEVERITY_RANK.fetch(fail_on.upcase)
         if report.findings.any? { |finding| SEVERITY_RANK.fetch(finding.severity) >= threshold }
-          reasons << "achados com severidade >= #{fail_on.upcase}"
+          reasons << "findings with severity >= #{fail_on.upcase}"
         end
       end
       if !max_risk.nil? && report.metrics.security_impact_score > max_risk
@@ -73,21 +73,21 @@ module Secscan
         opts.banner = <<~BANNER
           Usage: secscan [path] [options]
 
-          Análise estática de segredos, entropia e rotas de API.
+          Static analysis for secrets, entropy, and API paths.
 
         BANNER
         opts.on("--format FORMAT", FORMATS, "table, json, sarif, csv, markdown") { |value| options[:format] = value }
-        opts.on("--rules FILE", "JSON com regras adicionais") { |value| options[:rules] = value }
-        opts.on("--ignore LIST", "Padrões extras, separados por vírgula") do |value|
+        opts.on("--rules FILE", "JSON file with extra rules") { |value| options[:rules] = value }
+        opts.on("--ignore LIST", "Extra ignore patterns, comma-separated") do |value|
           options[:ignore] = value.split(",").map(&:strip).reject(&:empty?)
         end
-        opts.on("--fail-on LEVEL", FAIL_LEVELS, "Exit 1 se houver achado nessa severidade ou acima") do |value|
+        opts.on("--fail-on LEVEL", FAIL_LEVELS, "Exit 1 if a finding meets or exceeds this severity") do |value|
           options[:fail_on] = value
         end
-        opts.on("--max-risk SCORE", Float, "Exit 1 se o impact score passar do teto") { |value| options[:max_risk] = value }
-        opts.on("--output FILE", "Grava o relatório neste arquivo") { |value| options[:output] = value }
-        opts.on("--reveal-secrets", "Inclui o valor encontrado no relatório") { options[:reveal_secrets] = true }
-        opts.on("-v", "--version", "Versão") { options[:version] = true }
+        opts.on("--max-risk SCORE", Float, "Exit 1 if the impact score exceeds the cap") { |value| options[:max_risk] = value }
+        opts.on("--output FILE", "Write the report to this file") { |value| options[:output] = value }
+        opts.on("--reveal-secrets", "Include the matched value in the report") { options[:reveal_secrets] = true }
+        opts.on("-v", "--version", "Print version") { options[:version] = true }
       end
     end
   end

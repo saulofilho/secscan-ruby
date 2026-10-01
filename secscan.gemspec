@@ -10,9 +10,10 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "SAST engine for secrets, Shannon entropy, API paths, and CI quality gates"
   spec.description   = <<~DESC
-    Ruby gem that scans JavaScript and TypeScript trees for hardcoded secrets,
-    high-entropy tokens, and sensitive API paths. Emits JSON, CSV, SARIF, and
-    Markdown, and fails CI when a severity or cumulative impact score is exceeded.
+    Static analysis engine for JavaScript and TypeScript trees. Detects hardcoded
+    secrets, high-entropy tokens, and sensitive API paths, then emits table, JSON,
+    CSV, SARIF, or Markdown. Fails CI when a severity threshold or cumulative
+    impact score is exceeded. Serialized reports mask matched values.
   DESC
   spec.homepage      = "https://saulofilho.github.io/secscan/"
   spec.license       = "MIT"
@@ -20,10 +21,11 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/saulofilho/secscan-ruby"
+  spec.metadata["changelog_uri"] = "https://github.com/saulofilho/secscan-ruby/blob/main/CHANGELOG.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.files = Dir.chdir(__dir__) do
-    Dir.glob("{lib,exe}/**/*", File::FNM_DOTMATCH) + %w[README.md LICENSE.txt CHANGELOG.md]
+    Dir.glob("{lib,exe,examples}/**/*", File::FNM_DOTMATCH) + %w[README.md LICENSE.txt CHANGELOG.md]
   end
 
   spec.bindir        = "exe"
